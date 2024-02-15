@@ -37,20 +37,21 @@ jobs:
             done
 
             # Opret problem ved hjælp af GitHub API
-            assignee_param=""
-            labels_param=""
+            data="{\"title\":\"$title\""
 
             if [ -n "$assignee" ]; then
-              assignee_param="\"assignees\":[\"$assignee\"]"
+              data="$data,\"assignees\":[\"$assignee\"]"
             fi
 
             if [ -n "$labels" ]; then
               labels_array="[\"$(echo "$labels" | sed 's/,/","/g')\"]"
-              labels_param="\"labels\":$labels_array"
+              data="$data,\"labels\":$labels_array"
             fi
 
+            data="$data}"
+
             response=$(curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
-                     -d "{\"title\":\"$title\",$assignee_param,$labels_param}" \
+                     -d "$data" \
                      "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues")
 
             if [ "$(echo "$response" | jq -r '.errors')" != "null" ]; then
