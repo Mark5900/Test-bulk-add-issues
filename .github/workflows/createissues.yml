@@ -7,6 +7,8 @@ on:
 
 jobs:
   bulk_create_issues:
+    permissions:
+      issues: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
