@@ -16,11 +16,30 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Bulk Create Issues
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Læs data fra CSV-fil (issues.csv), start fra anden række
-          tail -n +2 issues.csv | while IFS=, read -r title body; do
+          tail -n +2 issues.csv | while IFS=, read -r title assignee labels; do
+            # Fjern anførselstegn fra variablerne, hvis de findes
+            title=$(echo $title | sed 's/"//g')
+            assignee=$(echo $assignee | sed 's/"//g')
+            labels=$(echo $labels | sed 's/"//g')
+
             # Opret problem ved hjælp af GitHub API
-            curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                 -d "{\"title\":\"$title\",\"body\":\"$body\"}" \
+            if [ -z "$assignee" ]; then
+              assignee_param=""
+            else
+              assignee_param="\"assignees\":[\"$assignee\"]"
+            fi
+
+            if [ -z "$labels" ]; then
+              labels_param=""
+            else
+              labels_param="\"labels\":[\"$labels\"]"
+            fi
+
+            curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
+                 -d "{\"title\":\"$title\",$assignee_param,$labels_param}" \
                  "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues"
           done
