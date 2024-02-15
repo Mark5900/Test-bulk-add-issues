@@ -27,15 +27,14 @@ jobs:
             labels=$(echo $labels | sed 's/"//g')
 
             # Opret problem ved hjælp af GitHub API
-            if [ -z "$assignee" ]; then
-              assignee_param=""
-            else
+            assignee_param=""
+            labels_param=""
+
+            if [ ! -z "$assignee" ]; then
               assignee_param="\"assignees\":[\"$assignee\"]"
             fi
 
-            if [ -z "$labels" ]; then
-              labels_param=""
-            else
+            if [ ! -z "$labels" ]; then
               labels_param="\"labels\":[\"$labels\"]"
             fi
 
