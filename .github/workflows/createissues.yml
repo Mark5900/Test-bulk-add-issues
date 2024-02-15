@@ -26,6 +26,16 @@ jobs:
             assignee=$(echo $assignee | sed 's/"//g')
             labels=$(echo $labels | sed 's/"//g')
 
+            # Opret etiketter, hvis de ikke eksisterer
+            for label in $(echo "$labels" | tr "," "\n"); do
+              if ! curl -s -o /dev/null -w "%{http_code}" -X GET -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${GITHUB_REPOSITORY}/labels/${label}"; then
+                echo "Label '$label' does not exist. Creating it..."
+                curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
+                  -d "{\"name\":\"$label\",\"color\":\"#ffffff\"}" \
+                  "https://api.github.com/repos/${GITHUB_REPOSITORY}/labels"
+              fi
+            done
+
             # Opret problem ved hjælp af GitHub API
             assignee_param=""
             labels_param=""
