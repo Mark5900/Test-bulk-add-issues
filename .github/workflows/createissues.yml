@@ -3,12 +3,13 @@ name: Bulk Create GitHub Issues
 on:
   push:
     branches:
-      - main  # Du kan justere dette for at udløse arbejdsgangen på forskellige grene, hvis det er nødvendigt
+      - main
+
+permissions:
+  issues: write
 
 jobs:
   bulk_create_issues:
-    permissions:
-      issues: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -16,10 +17,10 @@ jobs:
 
       - name: Bulk Create Issues
         run: |
-          # Læs data fra CSV-fil (issues.csv)
-          while IFS=, read -r title body; do
+          # Læs data fra CSV-fil (issues.csv), start fra anden række
+          tail -n +2 issues.csv | while IFS=, read -r title body; do
             # Opret problem ved hjælp af GitHub API
             curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                  -d "{\"title\":\"$title\",\"body\":\"$body\"}" \
                  "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues"
-          done < issues.csv
+          done
