@@ -9,8 +9,8 @@ This repo can be used to create multiple issues in this repo. You can afterwards
 2. Commit and push the changes to the `issues.csv` file to the `main` branch.
 3. The issues will be created automatically.
 4. You can add the issues to a project board by adding the issues to the project board.
-  1. Pres the `+` button in the project board and select `Add item from repository`. ![Add item from repository](./img/Add_item_from_repository.png)
-  2. Select the issues you want to add and press `Add selected items`. ![Add selected items](./img/Add_selected_items.png)
+  1. Pres the `+` button in the project board and select `Add item from repository`. ![Add item from repository](Img/Add_item_from_repository.png)
+  2. Select the issues you want to add and press `Add selected items`. ![Add selected items](Img/Add_selected_items.png)
 
 ## What about labels?
 
