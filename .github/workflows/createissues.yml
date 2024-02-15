@@ -38,7 +38,14 @@ jobs:
               labels_param="\"labels\":[\"$labels\"]"
             fi
 
-            curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
-                 -d "{\"title\":\"$title\",$assignee_param,$labels_param}" \
-                 "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues"
+            response=$(curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
+                     -d "{\"title\":\"$title\",$assignee_param,$labels_param}" \
+                     "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues")
+
+            if [ "$(echo "$response" | jq -r '.errors')" != "null" ]; then
+              echo "Error creating issue for: $title"
+              echo "Error response: $response"
+            else
+              echo "Issue created successfully for: $title"
+            fi
           done
