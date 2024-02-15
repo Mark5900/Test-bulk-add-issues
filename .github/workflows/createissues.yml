@@ -45,8 +45,8 @@ jobs:
             fi
 
             if [ -n "$labels" ]; then
-              labels_array=$(echo "$labels" | tr "," "\",\"")
-              labels_param="\"labels\":[\"$labels_array\"]"
+              labels_array="[\"$(echo "$labels" | sed 's/,/","/g')\"]"
+              labels_param="\"labels\":$labels_array"
             fi
 
             response=$(curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
