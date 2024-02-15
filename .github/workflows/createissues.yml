@@ -30,11 +30,11 @@ jobs:
             assignee_param=""
             labels_param=""
 
-            if [ ! -z "$assignee" ]; then
+            if [ -n "$assignee" ]; then
               assignee_param="\"assignees\":[\"$assignee\"]"
             fi
 
-            if [ ! -z "$labels" ]; then
+            if [ -n "$labels" ]; then
               labels_param="\"labels\":[\"$labels\"]"
             fi
 
